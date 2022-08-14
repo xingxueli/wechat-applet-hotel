@@ -1,0 +1,4 @@
+<view id="js-page-wrap" class="promotion-detail-container">
+  <images-videos resources="{{commentResources}}" />
+</view>
+

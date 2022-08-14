@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "精彩视频",
+  "usingComponents": {
+    "images-videos": "./components/images-videos"
+  }
+}
