@@ -40,24 +40,24 @@
 }
 
 .goods-category-normal-item-container-item {
-  height: 196rpx;
+  height: 400rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 24rpx;
-  width: 33.3%;
+  width: 100%;
 }
 
 .goods-category-normal-item-container-item .image {
-  width: 144rpx;
-  height: 144rpx;
+  width: 550rpx;
+  height: 360rpx;
 }
 
 .goods-category-normal-item-container-item-title {
   justify-content: center;
   font-size: 24rpx;
   color: #666666;
-  margin-top: 20rpx;
+  margin-top: 0rpx;
 }
 
 .goods-category .custom-sidebar {

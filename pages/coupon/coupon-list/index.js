@@ -1,77 +1,66 @@
-import { fetchCouponList } from '../../../services/coupon/index';
-
+// pages/coupon/coupon-list/index.js
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    status: 0,
-    list: [
-      {
-        text: '可使用',
-        key: 0,
-      },
-      {
-        text: '已使用',
-        key: 1,
-      },
-      {
-        text: '已失效',
-        key: 2,
-      },
-    ],
 
-    couponList: [],
   },
 
-  onLoad() {
-    this.init();
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad(options) {
+
   },
 
-  init() {
-    this.fetchList();
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady() {
+
   },
 
-  fetchList(status = this.data.status) {
-    let statusInFetch = '';
-    switch (Number(status)) {
-      case 0: {
-        statusInFetch = 'default';
-        break;
-      }
-      case 1: {
-        statusInFetch = 'useless';
-        break;
-      }
-      case 2: {
-        statusInFetch = 'disabled';
-        break;
-      }
-      default: {
-        throw new Error(`unknown fetchStatus: ${statusInFetch}`);
-      }
-    }
-    fetchCouponList(statusInFetch).then((couponList) => {
-      this.setData({ couponList });
-    });
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
+
   },
 
-  tabChange(e) {
-    const { value } = e.detail;
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide() {
 
-    this.setData({ status: value });
-    this.fetchList(value);
   },
 
-  goCouponCenterHandle() {
-    wx.showToast({ title: '去领券中心', icon: 'none' });
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload() {
+
   },
 
-  onPullDownRefresh_() {
-    this.setData(
-      {
-        couponList: [],
-      },
-      () => {
-        this.fetchList();
-      },
-    );
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh() {
+
   },
-});
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom() {
+
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage() {
+
+  }
+})

@@ -149,6 +149,15 @@
  zIndex="{{999}}"
  bindclose='hideSpecsPopup'
 />
+<!-- <t-date-time-picker   
+            title="选择日期"
+            visible="{{isShowSpecs}}"
+            mode="{{['date']}}"
+            value="{{date}}"
+            format="YYYY-MM-DD"
+            bindconfirm="onConfirm"
+            bindcancel="hideSpecsPopup">
+            </t-date-time-picker> -->
 
 <t-toast id="t-toast" />
 
