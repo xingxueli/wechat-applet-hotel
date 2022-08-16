@@ -9,7 +9,6 @@ Page({
 
   onLoad(query) {
     const promotionID = parseInt(query.promotion_id);
-    console.log('promotionID=',promotionID);
     this.getGoodsList(promotionID);
   },
 

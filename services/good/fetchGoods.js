@@ -20,10 +20,21 @@ function mockFetchGoodsList(pageIndex = 1, pageSize = 20) {
 
 /** 获取商品列表 */
 export function fetchGoodsList(pageIndex = 1, pageSize = 20) {
-  if (config.useMock) {
-    return mockFetchGoodsList(pageIndex, pageSize);
-  }
-  return new Promise((resolve) => {
-    resolve('real api');
-  });
+  // if (config.useMock) {
+  //   return mockFetchGoodsList(pageIndex, pageSize);
+  // }
+    return wx.cloud.callContainer({
+      "config": {
+        "env": "prod-3gvqnfsbbbe3e2b9"
+      },
+      "path": "/room/list",
+      "header": {
+        "X-WX-SERVICE": "springboot-krih",
+        "content-type": "application/json"
+      },
+      "method": "GET",
+      "data": {}
+    }).then((res) =>{
+      return res.data.data;
+    });
 }

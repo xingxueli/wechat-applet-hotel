@@ -1,12 +1,3 @@
-<wxs module="handlePromotion">
-	var hasPromotion = function (code) {
-	return code && code !== 'EMPTY_PROMOTION';
-	}
-	module.exports.hasPromotion = hasPromotion;
-</wxs>
-<wxs src="./utils.wxs" module="utils" />
-
-
 <view class="cart-group">
 	<view
 	 class="goods-wrap"
@@ -15,28 +6,6 @@
 	 wx:for-index="si"
 	 wx:key="storeId"
 	>
-		<view class="cart-store">
-			<t-icon
-			 size="40rpx"
-			 color="{{store.isSelected ? '#FA4126' : '#BBBBBB'}}"
-			 name="{{store.isSelected ? 'check-circle-filled' : 'circle'}}"
-			 class="cart-store__check"
-			 bindtap="selectStore"
-			 data-store-index="{{si}}"
-			/>
-			<view class="cart-store__content">
-				<view class="store-title">
-					<t-icon
-					 prefix="wr"
-					 size="40rpx"
-					 color="#333333"
-					 name="store"
-					/>
-					<view class="store-name">{{store.storeName}}</view>
-				</view>
-				<view class="get-coupon" catch:tap="gotoCoupons">优惠券</view>
-			</view>
-		</view>
 		<block
 		 wx:for="{{store.promotionGoodsList}}"
 		 wx:for-item="promotion"

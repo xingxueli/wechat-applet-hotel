@@ -53,9 +53,8 @@ Page({
     this.setData({
       pageLoading: true,
     });
-    fetchHome().then(({ swiper, tabList }) => {
+    fetchHome().then(({ swiper}) => {
       this.setData({
-        tabList,
         imgSrcs: swiper,
         pageLoading: false,
       });
