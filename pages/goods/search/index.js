@@ -110,7 +110,7 @@ Page({
   },
 
   handleSubmit(e) {
-    const { value } = e.detail.value;
+    const { value } = e.detail;
     if (value.length === 0) return;
     wx.navigateTo({
       url: `/pages/goods/result/index?searchValue=${value}`,

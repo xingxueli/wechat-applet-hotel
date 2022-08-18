@@ -29,11 +29,13 @@ export function genCartGroupData() {
                   storeId: '1000',
                   spuId: '12',
                   skuId: '135691622',
+                  startDateText: '',
+                  endDateText: '',
                   isSelected: 1,
                   thumb:
                     'https://cdn-we-retail.ym.tencent.com/tsr/goods/dz-3a.png',
                   title:
-                    '腾讯极光盒子4智能网络电视机顶盒6K千兆网络机顶盒4K高分辨率',
+                    '腾讯极光盒',
                   primaryImage:
                     'https://cdn-we-retail.ym.tencent.com/tsr/goods/dz-3a.png',
                   quantity: 1,
@@ -65,6 +67,8 @@ export function genCartGroupData() {
                   storeId: '1000',
                   spuId: '18',
                   skuId: '135681631',
+                  startDateText: '',
+                  endDateText: '',
                   isSelected: 1,
                   thumb:
                     'https://cdn-we-retail.ym.tencent.com/tsr/goods/nz-09a.png',
@@ -101,6 +105,8 @@ export function genCartGroupData() {
                   storeId: '1000',
                   spuId: '13',
                   skuId: '135698362',
+                  startDateText: '',
+                  endDateText: '',
                   isSelected: 1,
                   thumb:
                     'https://cdn-we-retail.ym.tencent.com/tsr/goods/muy-3a.png',
@@ -137,6 +143,8 @@ export function genCartGroupData() {
                   storeId: '1000',
                   spuId: '7',
                   skuId: '135681625',
+                  startDateText: '',
+                  endDateText: '',
                   isSelected: 1,
                   thumb:
                     'https://cdn-we-retail.ym.tencent.com/tsr/goods/gh-2b.png',
@@ -188,6 +196,8 @@ export function genCartGroupData() {
                   storeId: '1000',
                   spuId: '11',
                   skuId: '135691629',
+                  startDateText: '',
+                  endDateText: '',
                   isSelected: 0,
                   thumb:
                     'https://cdn-we-retail.ym.tencent.com/tsr/goods/nz-17a.png',
@@ -223,6 +233,8 @@ export function genCartGroupData() {
                   storeId: '1000',
                   spuId: '5',
                   skuId: '135691635',
+                  startDateText: '',
+                  endDateText: '',
                   isSelected: 0,
                   thumb:
                     'https://cdn-we-retail.ym.tencent.com/tsr/goods/dz-2a.png',
@@ -279,6 +291,8 @@ export function genCartGroupData() {
           storeId: '1000',
           spuId: '1',
           skuId: '135691631',
+          startDateText: '',
+          endDateText: '',
           isSelected: 1,
           thumb: 'https://cdn-we-retail.ym.tencent.com/tsr/goods/nz-08b.png',
           title: '纯色纯棉休闲圆领短袖T恤纯白亲肤厚柔软细腻面料纯白短袖套头T恤',

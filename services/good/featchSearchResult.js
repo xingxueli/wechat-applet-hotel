@@ -2,12 +2,11 @@
 import { config } from '../../config/index';
 
 /** 获取搜索历史 */
-function mockSearchResult(params) {
+function mockSearchResult(params) { 
   const { delay } = require('../_utils/delay');
   const { getSearchResult } = require('../../model/search');
 
   const data = getSearchResult(params);
-
   if (data.spuList.length) {
     data.spuList.forEach((item) => {
       item.spuId = item.spuId;

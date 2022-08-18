@@ -5,7 +5,7 @@
 	  value="{{searchValue}}"
 	  leftIcon=""
 	  rightIcon=""
-	  placeholder="iPhone12pro"
+	  placeholder="1-301"
 	  bind:submit="handleSubmit"
 		focus
 	>

@@ -46,10 +46,6 @@
         "text": "分类"
       },
       {
-        "pagePath": "pages/cart/index",
-        "text": "购物车"
-      },
-      {
         "pagePath": "pages/usercenter/index",
         "text": "我的"
       }

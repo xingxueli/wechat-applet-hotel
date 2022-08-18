@@ -82,6 +82,7 @@ Page({
       const result = await getSearchResult(params);
       const code = 'Success';
       const data = result;
+      // console.log(data)
       if (code.toUpperCase() === 'SUCCESS') {
         const { spuList, totalCount = 0 } = data;
         if (totalCount === 0 && reset) {
@@ -135,9 +136,10 @@ Page({
     });
   },
 
-  handleSubmit() {
+  handleSubmit(e) {
     this.setData(
       {
+        keywords: e.detail.value,
         goodsList: [],
         loadMoreStatus: 0,
       },
