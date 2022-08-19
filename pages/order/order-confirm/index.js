@@ -40,14 +40,19 @@ Page({
     submitCouponList: [], //所有门店所选优惠券
     currentStoreId: null, //当前优惠券storeId
     userAddress: null,
+    startDate: '',
+    endDate: ''
   },
 
   payLock: false,
   noteInfo: [],
   tempNoteInfo: [],
   onLoad(options) {
+    let loadData = JSON.parse(options.goodsRequestList);
     this.setData({
       loading: true,
+      startDate: loadData[0].startDate,
+      endDate: loadData[0].endDate
     });
     this.handleOptionsParams(options);
   },
@@ -361,15 +366,14 @@ Page({
     } = this.data;
     const { goodsRequestList } = this;
 
-    if (!userAddressReq && !settleDetailData.userAddress) {
+    if (!startDate && !endDate) {
       Toast({
         context: this,
         selector: '#t-toast',
-        message: '请添加收货地址',
+        message: '请添加入住时间',
         duration: 2000,
         icon: 'help-circle',
       });
-
       return;
     }
     if (

@@ -5,6 +5,7 @@ import {
   getGoodsDetailsCommentList,
   getGoodsDetailsCommentsCount,
 } from '../../../services/good/fetchGoodsDetailsComments';
+import dayjs from 'dayjs';
 
 import { cdnBase } from '../../../config/index';
 
@@ -71,7 +72,8 @@ Page({
     skuArray: [],
     primaryImage: '',
     specImg: '',
-    isSpuSelectPopupShow: false,
+    isStartPopupShow: false,
+    isEndPopupShow: false,
     isAllSelectedSku: false,
     buyType: 0,
     outOperateStatus: false, // 是否外层加入购物车
@@ -88,19 +90,31 @@ Page({
     duration: 500,
     interval: 5000,
     soldNum: 0, // 已售数量
+    startDate: '',
+    endDate: '',
+    initDateText: dayjs().format('YYYY-MM-DD'),
   },
 
-  handlePopupHide() {
+  // handlePopupHide() {
+  //   this.setData({
+  //     isStartPopupShow: false,
+  //     isEndPopupShow: false,
+  //   });
+  // },
+
+  showStartPopup(type) {
     this.setData({
-      isSpuSelectPopupShow: false,
+      buyType: 1,
+      outOperateStatus: type >= 1,
+      isStartPopupShow: true
     });
   },
 
-  showSkuSelectPopup(type) {
+  showEndPopup(type) {
     this.setData({
-      buyType: type || 0,
+      buyType: 1,
       outOperateStatus: type >= 1,
-      isSpuSelectPopupShow: true,
+      isEndPopupShow: true,
     });
   },
 
@@ -221,37 +235,42 @@ Page({
   },
 
   addCart() {
-    const { isAllSelectedSku } = this.data;
+    const { startDate,endDate } = this.data;
+    let msg = '';
+    if(startDate){
+      msg = '请选择开始时间';
+    }
+    if(endDate){
+      msg = '请选择结束时间';
+    }
     Toast({
       context: this,
       selector: '#t-toast',
-      message: isAllSelectedSku ? '点击加入购物车' : '请选择规格',
+      message: msg,
       icon: '',
       duration: 1000,
     });
   },
 
   gotoBuy(type) {
-    const { isAllSelectedSku, buyNum } = this.data;
-    if (!isAllSelectedSku) {
+    const { startDate,endDate, buyNum } = this.data;
+    if (!startDate || !endDate) {
       Toast({
         context: this,
         selector: '#t-toast',
-        message: '请选择规格',
+        message: '请选择入住时间',
         icon: '',
         duration: 1000,
       });
       return;
     }
-    this.handlePopupHide();
     const query = {
       quantity: buyNum,
       storeId: '1',
       spuId: this.data.spuId,
       goodsName: this.data.details.title,
-      skuId:
-        type === 1 ? this.data.skuList[0].skuId : this.data.selectItem.skuId,
-      available: this.data.details.available,
+      skuId: this.data.skuId,
+      available: 1,
       price: this.data.details.minSalePrice,
       specInfo: this.data.details.specList?.map((item) => ({
         specTitle: item.title,
@@ -261,25 +280,42 @@ Page({
       spuId: this.data.details.spuId,
       thumb: this.data.details.primaryImage,
       title: this.data.details.title,
+      startDate: startDate,
+      endDate: endDate,
     };
     let urlQueryStr = obj2Params({
       goodsRequestList: JSON.stringify([query]),
     });
     urlQueryStr = urlQueryStr ? `?${urlQueryStr}` : '';
+    console.log(urlQueryStr)
     const path = `/pages/order/order-confirm/index${urlQueryStr}`;
     wx.navigateTo({
       url: path,
     });
   },
 
-  specsConfirm() {
+  onStartConfirm(e) {
+    this.setData({
+      startDate: e.detail.value,
+    });
     const { buyType } = this.data;
     if (buyType === 1) {
       this.gotoBuy();
     } else {
       this.addCart();
     }
-    // this.handlePopupHide();
+  },
+
+  onEndConfirm(e) {
+    this.setData({
+      endDate: e.detail.value,
+    });
+    const { buyType } = this.data;
+    if (buyType === 1) {
+      this.gotoBuy();
+    } else {
+      this.addCart();
+    }
   },
 
   changeNum(e) {

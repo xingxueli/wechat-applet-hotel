@@ -30,23 +30,7 @@
 					<view class="goods-price-up">起</view>
 					<price wr-class="class-goods-del" price="{{maxLinePrice}}" type="delthrough" />
 				</view>
-				<view class="sold-num">已售{{soldNum}}</view>
-			</view>
-			<view wx:if="{{activityList.length > 0}}" class="goods-activity" bindtap="showPromotionPopup">
-				<view class="tags-container">
-					<view
-					  wx:for="{{activityList}}"
-					  data-promotionId="{{item.promotionId}}"
-					  wx:key="index"
-					  wx:if="{{index<4}}"
-					>
-						<view class="goods-activity-tag">{{item.tag}}</view>
-					</view>
-				</view>
-				<view class="activity-show">
-					<view class="activity-show-text">领劵</view>
-					<t-icon name="chevron-right" size="42rpx" />
-				</view>
+				<view class="sold-num">已被预订，预定时间2022-09-12</view>
 			</view>
 			<view class="goods-title">
 				<view class="goods-name">{{details.title}}</view>
@@ -61,11 +45,20 @@
 			</view>
 			<view class="goods-intro">{{intro}}</view>
 		</view>
-		<view class="spu-select" bindtap="showSkuSelectPopup">
-			<view class="label">已选</view>
+		<view class="spu-select" bindtap="showStartPopup">
+			<view class="label">入住开始时间</view>
 			<view class="content">
 				<view class="{{!selectedAttrStr ? 'tintColor' : ''}}">
-					{{selectedAttrStr ? buyNum : ''}}{{selectedAttrStr || '请选择'}}
+					{{startDate}}
+				</view>
+				<t-icon name="chevron-right" size="40rpx" color="#BBBBBB" />
+			</view>
+		</view>
+    <view class="spu-select" bindtap="showEndPopup">
+			<view class="label">入住结束时间</view>
+			<view class="content">
+				<view class="{{!selectedAttrStr ? 'tintColor' : ''}}">
+					{{endDate}}
 				</view>
 				<t-icon name="chevron-right" size="40rpx" color="#BBBBBB" />
 			</view>
@@ -73,14 +66,10 @@
 		<view wx:if="{{ commentsStatistics.commentCount > 0 }}" class="comments-wrap">
 			<view class="comments-head" bindtap="navToCommentsListPage">
 				<view class="comments-title-wrap">
-					<view class="comments-title-label">商品评价</view>
+					<view class="comments-title-label">客房评价</view>
 					<view class="comments-title-count">
 						({{ commentsStatistics.commentCount }})
 					</view>
-				</view>
-				<view class="comments-rate-wrap">
-					<view class="comments-good-rate">{{commentsStatistics.goodRate}}% 好评</view>
-					<t-icon name="chevron-right" size="40rpx" color="#BBBBBB" />
 				</view>
 			</view>
 			<view
@@ -131,46 +120,24 @@
 		  class="goods-details-card"
 		/>
 	</view>
-	<goods-specs-popup
-	  id="goodsSpecsPopup"
-	  show="{{isSpuSelectPopupShow}}"
-	  title="{{details.title || ''}}"
-	  src="{{specImg ? specImg : primaryImage}}"
-	  specList="{{details.specList || []}}"
-	  skuList="{{skuArray}}"
-	  limitBuyInfo="{{details.limitInfo[0].text || ''}}"
-	  bind:closeSpecsPopup="handlePopupHide"
-	  bind:change="chooseSpecItem"
-	  bind:changeNum="changeNum"
-	  bind:addCart="addCart"
-	  bind:buyNow="gotoBuy"
-	  bind:specsConfirm="specsConfirm"
-	  isStock="{{isStock}}"
-	  outOperateStatus="{{outOperateStatus}}"
-	>
-		<view slot="goods-price">
-			<view class="popup-sku__price">
-				<price
-				  wx:if="{{!isAllSelectedSku || (!promotionSubCode && isAllSelectedSku)}}"
-				  price="{{selectSkuSellsPrice ? selectSkuSellsPrice : minSalePrice }}"
-				  wr-class="popup-sku__price-num"
-				  symbol-class="popup-sku__price-symbol"
-				/>
-				<price
-				  wx:if="{{selectSkuSellsPrice === 0 && minSalePrice !== maxSalePrice && !isAllSelectedSku}}"
-				  price="{{maxSalePrice}}"
-				  wr-class="popup-sku__price-del"
-				  type="delthrough"
-				/>
-			</view>
-		</view>
-	</goods-specs-popup>
-	<promotion-popup
-	  list="{{list}}"
-	  bind:closePromotionPopup="closePromotionPopup"
-	  show="{{isShowPromotionPop}}"
-	  bind:promotionChange="promotionChange"
-	/>
+  <t-date-time-picker   
+            title="开始日期"
+            visible="{{isStartPopupShow}}"
+            mode="{{['date']}}"
+            value="{{startDate}}"
+            start="{{initDateText}}"
+            format="YYYY-MM-DD"
+            bindchange="onStartConfirm">
+            </t-date-time-picker>
+            <t-date-time-picker   
+            title="结束日期"
+            visible="{{isEndPopupShow}}"
+            mode="{{['date']}}"
+            value="{{endDate}}"
+            start="{{startDate}}"
+            format="YYYY-MM-DD"
+            bindchange="onEndConfirm">
+            </t-date-time-picker>
 </view>
 <t-toast id="t-toast" />
 

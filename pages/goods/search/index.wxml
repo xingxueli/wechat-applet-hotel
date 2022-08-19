@@ -5,7 +5,7 @@
 	  value="{{searchValue}}"
 	  leftIcon=""
 	  rightIcon=""
-	  placeholder="1-301"
+	  placeholder="客房编码，例如1-301，1号楼301室"
 	  bind:submit="handleSubmit"
 		focus
 	>

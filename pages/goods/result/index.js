@@ -82,7 +82,6 @@ Page({
       const result = await getSearchResult(params);
       const code = 'Success';
       const data = result;
-      // console.log(data)
       if (code.toUpperCase() === 'SUCCESS') {
         const { spuList, totalCount = 0 } = data;
         if (totalCount === 0 && reset) {
@@ -101,7 +100,6 @@ Page({
 
         const _goodsList = reset ? spuList : goodsList.concat(spuList);
         _goodsList.forEach((v) => {
-          v.tags = v.spuTagList.map((u) => u.title);
           v.hideKey = { desc: true };
         });
         const _loadMoreStatus = _goodsList.length === totalCount ? 2 : 0;

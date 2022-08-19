@@ -4,30 +4,10 @@ import Toast from 'tdesign-miniprogram/toast/index';
 const menuData = [
   [
     {
-      title: '收货地址',
+      title: '全部订单',
       tit: '',
       url: '',
-      type: 'address',
-    },
-    {
-      title: '优惠券',
-      tit: '',
-      url: '',
-      type: 'coupon',
-    },
-    {
-      title: '积分',
-      tit: '',
-      url: '',
-      type: 'point',
-    },
-  ],
-  [
-    {
-      title: '帮助中心',
-      tit: '',
-      url: '',
-      type: 'help-center',
+      type: 'all-order',
     },
     {
       title: '客服热线',
@@ -89,13 +69,13 @@ const getDefaultData = () => ({
   customerServiceInfo: {},
   currAuthStep: 1,
   showKefu: true,
-  versionNo: '',
+  versionNo: ''
 });
 
 Page({
   data: getDefaultData(),
 
-  onLoad() {
+  onLoad(options) {
     this.getVersionInfo();
   },
 
@@ -119,6 +99,7 @@ Page({
         orderTagInfos: orderInfo,
         customerServiceInfo,
       }) => {
+        console.log(customerServiceInfo);
         // eslint-disable-next-line no-unused-expressions
         menuData?.[0].forEach((v) => {
           countsData.forEach((counts) => {
@@ -148,8 +129,8 @@ Page({
     const { type } = currentTarget.dataset;
 
     switch (type) {
-      case 'address': {
-        wx.navigateTo({ url: '/pages/usercenter/address/list/index' });
+      case 'all-order': {
+        wx.navigateTo({ url: '/pages/order/order-list/index' });
         break;
       }
       case 'service': {
