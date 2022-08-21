@@ -56,17 +56,17 @@
 			/>
 		</view>
     <view class="pay-item">
-			<text>开始时间</text>
+			<text bindtap="onStartDate">开始时间</text>
 			{{startDate}}
 		</view>
     <view class="pay-item">
-			<text>结束时间</text>
+			<text bindtap="onEndDate">结束时间</text>
 			{{endDate}}
 		</view>
 		<view class="pay-item">
 			<text>订单备注</text>
 			<view class="pay-item__right" data-storenoteindex="{{0}}" catchtap="onNotes">
-				<text class="pay-remark">{{getNotes(storeInfoList, 0) ? getNotes(storeInfoList, 0) :'选填，建议先和商家沟通确认'}}</text>
+				<text class="pay-remark">{{getNotes(storeInfoList, 0) ? getNotes(storeInfoList, 0) :'选填，建议先和酒店沟通确认'}}</text>
 				<t-icon name="chevron-right" size="32rpx" color="#BBBBBB" />
 			</view>
 		</view>
@@ -122,9 +122,9 @@
 		 maxlength="{{50}}"
 		/>
 	</t-dialog>
-	<t-popup visible="{{popupShow}}" placement="bottom" bind:visible-change="onPopupChange">
+	<!-- <t-popup visible="{{popupShow}}" placement="bottom" bind:visible-change="onPopupChange">
 		<no-goods slot="content" bind:change="onSureCommit" settleDetailData="{{settleDetailData}}" />
-	</t-popup>
+	</t-popup> -->
 </view>
 <t-toast id="t-toast" />
 <t-dialog id="t-dialog" t-class-confirm="dialog__button-confirm" />

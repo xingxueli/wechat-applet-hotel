@@ -75,7 +75,7 @@ const getDefaultData = () => ({
 Page({
   data: getDefaultData(),
 
-  onLoad(options) {
+  onLoad() {
     this.getVersionInfo();
   },
 

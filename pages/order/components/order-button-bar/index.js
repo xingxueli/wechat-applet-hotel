@@ -29,11 +29,9 @@ Component({
           .map((button) => {
             //邀请好友拼团按钮
             if (
-              button.type === OrderButtonTypes.INVITE_GROUPON &&
-              order.groupInfoVo
+              button.type === OrderButtonTypes.INVITE_GROUPON
             ) {
               const {
-                groupInfoVo: { groupId, promotionId, remainMember, groupPrice },
                 goodsList,
               } = order;
               const goodsImg = goodsList[0] && goodsList[0].imgUrl;
@@ -181,7 +179,6 @@ Component({
         skuId: goods?.skuId ?? '19384938948343',
         spuId: goods?.spuId ?? '28373847384343',
         orderStatus: order.status,
-        logisticsNo: order.logisticsNo,
         price: goods?.price ?? 89,
         num: goods?.num ?? 89,
         createTime: order.createTime,

@@ -15,9 +15,9 @@ Page({
     tabs: [
       { key: -1, text: '全部' },
       { key: OrderStatus.PENDING_PAYMENT, text: '待付款', info: '' },
-      { key: OrderStatus.PENDING_DELIVERY, text: '待发货', info: '' },
-      { key: OrderStatus.PENDING_RECEIPT, text: '待收货', info: '' },
-      { key: OrderStatus.COMPLETE, text: '已完成', info: '' },
+      { key: OrderStatus.PENDING_DELIVERY, text: '待入住', info: '' },
+      { key: OrderStatus.PENDING_RECEIPT, text: '已入住', info: '' },
+      { key: OrderStatus.COMPLETE, text: '已退房', info: '' },
     ],
     curTab: -1,
     orderList: [],
@@ -99,7 +99,6 @@ Page({
               statusDesc: order.orderStatusName,
               amount: order.paymentAmount,
               totalAmount: order.totalAmount,
-              logisticsNo: order.logisticsVO.logisticsNo,
               createTime: order.createTime,
               goodsList: (order.orderItemVOs || []).map((goods) => ({
                 id: goods.id,
@@ -110,16 +109,14 @@ Page({
                 specs: (goods.specifications || []).map(
                   (spec) => spec.specValue,
                 ),
-                price: goods.tagPrice ? goods.tagPrice : goods.actualPrice,
-                num: goods.buyQuantity,
-                titlePrefixTags: goods.tagText ? [{ text: goods.tagText }] : [],
+                price: goods.actualPrice,
+                num: goods.buyQuantity
               })),
-              buttons: order.buttonVOs || [],
-              groupInfoVo: order.groupInfoVo,
-              freightFee: order.freightFee,
+              buttons: order.buttonVOs || []
             };
           });
         }
+        console.log(orderList);
         return new Promise((resolve) => {
           if (reset) {
             this.setData({ orderList: [] }, () => resolve());

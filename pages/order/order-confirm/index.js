@@ -1,7 +1,6 @@
 import Toast from 'tdesign-miniprogram/toast/index';
 import { fetchSettleDetail } from '../../../services/order/orderConfirm';
 import { commitPay, wechatPayOrder } from './pay';
-import { getAddressPromise } from '../../usercenter/address/list/util';
 
 const stripeImg = `https://cdn-we-retail.ym.tencent.com/miniapp/order/stripe.png`;
 
@@ -232,9 +231,8 @@ Page({
             thumb: item.image,
             title: item.goodsName,
             specs: item.skuSpecLst.map((s) => s.specValue), // 规格列表 string[]
-            price: item.tagPrice || item.settlePrice || '0', // 优先取限时活动价
+            price: '0', // 优先取限时活动价
             settlePrice: item.settlePrice,
-            titlePrefixTags: item.tagText ? [{ text: item.tagText }] : [],
             num: item.quantity,
             skuId: item.skuId,
             spuId: item.spuId,
@@ -259,28 +257,7 @@ Page({
     this.setData({ orderCardList, storeInfoList, submitCouponList });
     return data;
   },
-  onGotoAddress() {
-    /** 获取一个Promise */
-    getAddressPromise()
-      .then((address) => {
-        this.handleOptionsParams({
-          userAddressReq: { ...address, checked: true },
-        });
-      })
-      .catch(() => {});
 
-    const { userAddressReq } = this; // 收货地址
-
-    let id = '';
-
-    if (userAddressReq?.id) {
-      id = `&id=${userAddressReq.id}`;
-    }
-
-    wx.navigateTo({
-      url: `/pages/usercenter/address/list/index?selectMode=1&isOrderSure=1${id}`,
-    });
-  },
   onNotes(e) {
     const { storenoteindex: storeNoteIndex } = e.currentTarget.dataset;
     // 添加备注信息
@@ -310,19 +287,27 @@ Page({
   },
   onNoteConfirm() {
     // 备注信息 确认按钮
-    const { storeInfoList, storeNoteIndex } = this.data;
-    this.tempNoteInfo[storeNoteIndex] = this.noteInfo[storeNoteIndex];
-    storeInfoList[storeNoteIndex].remark = this.noteInfo[storeNoteIndex];
+    // const { storeInfoList, storeNoteIndex } = this.data;
+    // this.tempNoteInfo[storeNoteIndex] = this.noteInfo[storeNoteIndex];
+    // storeInfoList[storeNoteIndex].remark = this.noteInfo[storeNoteIndex];
 
     this.setData({
       dialogShow: false,
-      storeInfoList,
+      // storeInfoList,
     });
   },
+
+  onStartDate(){
+
+  },
+  onEndDate(){
+
+  },
+
   onNoteCancel() {
     // 备注信息 取消按钮
-    const { storeNoteIndex } = this.data;
-    this.noteInfo[storeNoteIndex] = this.tempNoteInfo[storeNoteIndex];
+    // const { storeNoteIndex } = this.data;
+    // this.noteInfo[storeNoteIndex] = this.tempNoteInfo[storeNoteIndex];
     this.setData({
       dialogShow: false,
     });
@@ -363,6 +348,8 @@ Page({
       invoiceData,
       storeInfoList,
       submitCouponList,
+      startDate,
+      endDate
     } = this.data;
     const { goodsRequestList } = this;
 
@@ -376,6 +363,9 @@ Page({
       });
       return;
     }
+    console.log(this.payLock)
+    console.log(!settleDetailData.settleType)
+    console.log(!settleDetailData.totalAmount)
     if (
       this.payLock ||
       !settleDetailData.settleType ||
@@ -399,6 +389,7 @@ Page({
     }
     commitPay(params).then(
       (res) => {
+        console.log(res)
         this.payLock = false;
         const { data } = res;
         // 提交出现 失效 不在配送范围 限购的商品 提示弹窗
@@ -422,6 +413,7 @@ Page({
         }
       },
       (err) => {
+        console.log(err)
         this.payLock = false;
         if (
           err.code === 'CONTAINS_INSUFFICIENT_GOODS' ||

@@ -18,8 +18,6 @@ export const transformGoodsDataToConfirmData = (goodsDataList) => {
       realSettlePrice: goodsData.price,
       settlePrice: goodsData.price,
       oriPrice: goodsData.originPrice,
-      tagPrice: null,
-      tagText: null,
       skuSpecLst: goodsData.specInfo,
       promotionIds: null,
       weight: 0.0,
@@ -59,7 +57,7 @@ export function genSettleDetail(params) {
       storeGoodsList: [
         {
           storeId: '1000',
-          storeName: '云Mall深圳旗舰店',
+          storeName: '红兴农家院',
           remark: null,
           goodsCount: 1,
           deliveryFee: '0',
@@ -114,7 +112,7 @@ export function genSettleDetail(params) {
 
   // 计算总价
   const totalPrice = list.reduce((pre, cur) => {
-    return pre + cur.quantity * Number(cur.settlePrice);
+    return pre + cur.quantity * Number(cur.actualPrice);
   }, 0);
 
   // 计算折扣
