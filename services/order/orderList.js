@@ -10,16 +10,17 @@ export function fetchOrders(params) {
       "X-WX-SERVICE": "springboot-krih",
       "content-type": "application/json"
     },
-    "method": "GET",
-    "data": {}
+    "method": "POST",
+    "data": {"orderStatus":params.orderStatus,"pageNum":params.parameter.pageNum,"pageSize":params.parameter.pageSize}
   }).then((res) =>{
-    return res.data.data;
+    console.log(res)
+    return res.data;
   });
 }
 
 /** 获取订单列表统计 */
 export function fetchOrdersCount(params) {
-  console.log(params)
+  // console.log(params)
   return wx.cloud.callContainer({
     "config": {
       "env": "prod-3gvqnfsbbbe3e2b9"
@@ -32,6 +33,7 @@ export function fetchOrdersCount(params) {
     "method": "GET",
     "data": {}
   }).then((res) =>{
+    // console.log(res)
     return res.data.data;
   });
 }
