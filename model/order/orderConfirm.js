@@ -25,7 +25,6 @@ export const transformGoodsDataToConfirmData = (goodsDataList) => {
       volume: null,
       masterGoodsType: 0,
       viceGoodsType: 0,
-      roomId: goodsData.roomId,
       egoodsName: null,
     });
   });
@@ -45,13 +44,9 @@ export function genSettleDetail(params) {
       packageCount: 1,
       totalAmount: '289997',
       totalPayAmount: '',
-      totalDiscountAmount: '110000',
       totalPromotionAmount: '1100',
       totalCouponAmount: '0',
       totalSalePrice: '289997',
-      totalGoodsAmount: '289997',
-      totalDeliveryFee: '0',
-      invoiceRequest: null,
       skuImages: null,
       deliveryFeeList: null,
       storeGoodsList: [
@@ -64,7 +59,6 @@ export function genSettleDetail(params) {
           deliveryWords: null,
           storeTotalAmount: '0',
           storeTotalPayAmount: '179997',
-          storeTotalDiscountAmount: '110000',
           storeTotalCouponAmount: '0',
           skuDetailVos: [],
           couponList: [

@@ -48,19 +48,6 @@ Page({
       this.setData({
         countObj: result,
       });
-      // const { data, code = '' } = result;
-      // if (code.toUpperCase() === 'SUCCESS') {
-      //     wx.setNavigationBarTitle({
-      //     title: `全部评价(${data.commentCount})`,
-      //     });
-      //     this.setData({
-      //     countObj: data,
-      //     });
-      // } else {
-      //     wx.showToast({
-      //     title: '查询失败，请稍候重试',
-      //     });
-      // }
     } catch (error) {}
   },
   generalQueryData(reset) {

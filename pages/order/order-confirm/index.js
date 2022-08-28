@@ -194,7 +194,6 @@ Page({
       goodsName,
       skuId,
       storeName,
-      roomId,
     } = goods;
     const resQuantity = isOutStock ? reminderStock : quantity;
     return {
@@ -206,7 +205,6 @@ Page({
       goodsName,
       skuId,
       storeName,
-      roomId,
     };
   },
   handleResToGoodsCard(data) {
@@ -380,13 +378,9 @@ Page({
       goodsRequestList: goodsRequestList,
       userName: settleDetailData.userAddress.name || userAddressReq.name,
       totalAmount: settleDetailData.totalPayAmount, //取优惠后的结算金额
-      invoiceRequest: null,
       storeInfoList,
       couponList: resSubmitCouponList,
     };
-    if (invoiceData && invoiceData.email) {
-      params.invoiceRequest = invoiceData;
-    }
     commitPay(params).then(
       (res) => {
         console.log(res)

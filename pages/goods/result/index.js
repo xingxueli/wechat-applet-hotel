@@ -80,10 +80,10 @@ Page({
     });
     try {
       const result = await getSearchResult(params);
-      const code = 'Success';
-      const data = result;
+      const code = result.code;
+      const data = result.data;
       if (code.toUpperCase() === 'SUCCESS') {
-        const { spuList, totalCount = 0 } = data;
+        const { rooms, totalCount = 0 } = data;
         if (totalCount === 0 && reset) {
           this.total = totalCount;
           this.setData({
@@ -98,7 +98,7 @@ Page({
           return;
         }
 
-        const _goodsList = reset ? spuList : goodsList.concat(spuList);
+        const _goodsList = reset ? rooms : goodsList.concat(rooms);
         _goodsList.forEach((v) => {
           v.hideKey = { desc: true };
         });

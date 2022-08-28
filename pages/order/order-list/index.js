@@ -92,7 +92,6 @@ Page({
             return {
               id: order.orderId,
               orderNo: order.orderNo,
-              parentOrderNo: order.parentOrderNo,
               storeId: order.storeId,
               storeName: order.storeName,
               status: order.orderStatus,

@@ -83,13 +83,12 @@ Page({
       const _order = {
         id: order.orderId,
         orderNo: order.orderNo,
-        parentOrderNo: order.parentOrderNo,
         storeId: order.storeId,
         storeName: order.storeName,
         status: order.orderStatus,
         statusDesc: order.orderStatusName,
         amount: order.paymentAmount,
-        totalAmount: order.goodsAmountApp,
+        totalAmount: order.totalAmount,
         goodsList: (order.orderItemVOs || []).map((goods) =>
           Object.assign({}, goods, {
             id: goods.id,
@@ -114,10 +113,6 @@ Page({
           'YYYY-MM-DD HH:mm',
         ), // 格式化订单创建时间
         countDownTime: this.computeCountDownTime(order),
-        addressEditable:
-          [OrderStatus.PENDING_PAYMENT, OrderStatus.PENDING_DELIVERY].includes(
-            order.orderStatus,
-          ) && order.orderSubStatus !== -1, // 订单正在取消审核时不允许修改地址（但是返回的状态码与待发货一致）
         isPaid: !!order.paymentVO.paySuccessTime
       });
     });

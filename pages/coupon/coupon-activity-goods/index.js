@@ -1,78 +1,66 @@
-import { fetchCouponDetail } from '../../../services/coupon/index';
-import { fetchGoodsList } from '../../../services/good/fetchGoods';
-import Toast from 'tdesign-miniprogram/toast/index';
-
+// pages/coupon/coupon-activity-goods/index.js
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    goods: [],
-    detail: {},
-    couponTypeDesc: '',
-    showStoreInfoList: false,
-    cartNum: 2,
+
   },
 
-  id: '',
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad(options) {
 
-  onLoad(query) {
-    const id = parseInt(query.id);
-    this.id = id;
-
-    this.getCouponDetail(id);
-    this.getGoodsList(id);
   },
 
-  getCouponDetail(id) {
-    fetchCouponDetail(id).then(({ detail }) => {
-      this.setData({ detail });
-      if (detail.type === 2) {
-        if (detail.base > 0) {
-          this.setData({
-            couponTypeDesc: `满${detail.base / 100}元${detail.value}折`,
-          });
-        } else {
-          this.setData({ couponTypeDesc: `${detail.value}折` });
-        }
-      } else if (detail.type === 1) {
-        if (detail.base > 0) {
-          this.setData({
-            couponTypeDesc: `满${detail.base / 100}元减${detail.value / 100}元`,
-          });
-        } else {
-          this.setData({ couponTypeDesc: `减${detail.value / 100}元` });
-        }
-      }
-    });
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady() {
+
   },
 
-  getGoodsList(id) {
-    fetchGoodsList(id).then((goods) => {
-      this.setData({ goods });
-    });
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
+
   },
 
-  openStoreList() {
-    this.setData({
-      showStoreInfoList: true,
-    });
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide() {
+
   },
 
-  closeStoreList() {
-    this.setData({
-      showStoreInfoList: false,
-    });
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload() {
+
   },
 
-  goodClickHandle(e) {
-    const { index } = e.detail;
-    const { spuId } = this.data.goods[index];
-    wx.navigateTo({ url: `/pages/goods/details/index?spuId=${spuId}` });
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh() {
+
   },
 
-  cartClickHandle() {
-    Toast({
-      context: this,
-      selector: '#t-toast',
-      message: '点击加入购物车',
-    });
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom() {
+
   },
-});
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage() {
+
+  }
+})
