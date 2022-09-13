@@ -40,18 +40,29 @@ Page({
     currentStoreId: null, //当前优惠券storeId
     userAddress: null,
     startDate: '',
-    endDate: ''
+    endDate: '',
+    totalGoodsCount: 0,
+    totalSalePrice: '0',
+    totalPayAmount: 0,
+    settleType: 1,
+    orderName: '',
+    orderMobile: '',
+    orderNum: '',
   },
 
   payLock: false,
   noteInfo: [],
   tempNoteInfo: [],
   onLoad(options) {
-    let loadData = JSON.parse(options.goodsRequestList);
+    let loadData = JSON.parse(decodeURIComponent(options.goodsRequestList));
+    console.log(loadData)
     this.setData({
       loading: true,
       startDate: loadData[0].startDate,
-      endDate: loadData[0].endDate
+      endDate: loadData[0].endDate,
+      orderName: loadData[0].orderName,
+      orderMobile: loadData[0].orderMobile,
+      orderNum: loadData[0].orderNum
     });
     this.handleOptionsParams(options);
   },
@@ -89,7 +100,7 @@ Page({
       const goodsRequestListJson = wx.getStorageSync('order.goodsRequestList');
       goodsRequestList = JSON.parse(goodsRequestListJson);
     } else if (typeof options.goodsRequestList === 'string') {
-      goodsRequestList = JSON.parse(options.goodsRequestList);
+      goodsRequestList = JSON.parse(decodeURIComponent(options.goodsRequestList));
     }
     //获取结算页请求数据列表
     const storeMap = {};
@@ -104,34 +115,11 @@ Page({
     });
     this.goodsRequestList = goodsRequestList;
     this.storeInfoList = storeInfoList;
-    const params = {
-      goodsRequestList,
-      storeInfoList,
-      userAddressReq,
-      couponList,
-    };
-    fetchSettleDetail(params).then(
-      (res) => {
-        this.setData({
-          loading: false,
-        });
-        this.initData(res.data);
-      },
-      () => {
-        //接口异常处理
-        this.handleError();
-      },
-    );
+    this.initData(goodsRequestList);
   },
   initData(resData) {
     // 转换商品卡片显示数据
     const data = this.handleResToGoodsCard(resData);
-    this.userAddressReq = resData.userAddress;
-
-    if (resData.userAddress) {
-      this.setData({ userAddress: resData.userAddress });
-    }
-    this.setData({ settleDetailData: data });
     this.isInvalidOrder(data);
   },
 
@@ -213,46 +201,60 @@ Page({
     const storeInfoList = [];
     const submitCouponList = []; //使用优惠券列表;
 
-    data.storeGoodsList &&
-      data.storeGoodsList.forEach((ele) => {
+    console.log('enter handleResToGoodsCard')
+    console.log(data)
+    data &&
+      data.forEach((ele,index) => {
         const orderCard = {
           id: ele.storeId,
           storeName: ele.storeName,
           status: 0,
           statusDesc: '',
-          amount: ele.storeTotalPayAmount,
+          amount: ele.totalAmount,
+          remark: ele.remark,
+          quantity: ele.quantity,
           goodsList: [],
+          orderName: ele.orderName,
+          orderMobile: ele.orderMobile,
+          predictStartTime: ele.predictStartTime,
+          predictEndTime: ele.predictEndTime,
         }; // 订单卡片
-        ele.skuDetailVos.forEach((item, index) => {
-          orderCard.goodsList.push({
-            id: index,
-            thumb: item.image,
-            title: item.goodsName,
-            specs: item.skuSpecLst.map((s) => s.specValue), // 规格列表 string[]
-            price: '0', // 优先取限时活动价
-            settlePrice: item.settlePrice,
-            num: item.quantity,
-            skuId: item.skuId,
-            spuId: item.spuId,
-            storeId: item.storeId,
-          });
+
+        orderCard.goodsList.push({
+          id: index,
+          thumb: ele.thumb,
+          title: ele.goodsName,
+          specs: ['规格1','规格2'], // 规格列表 string[]
+          price: ele.price, // 优先取限时活动价
+          settlePrice: ele.price,
+          num: ele.quantity,
+          skuId: ele.spuId,
+          spuId: ele.spuId,
+          storeId: ele.storeId,
         });
 
         storeInfoList.push({
           storeId: ele.storeId,
           storeName: ele.storeName,
-          remark: '',
+          remark: ele.remark,
         });
-        submitCouponList.push({
-          storeId: ele.storeId,
-          couponList: ele.couponList || [],
-        });
-        this.noteInfo.push('');
-        this.tempNoteInfo.push('');
+        this.noteInfo.push(orderCard.remark);
+        this.tempNoteInfo.push(orderCard.remark);
         orderCardList.push(orderCard);
       });
-
-    this.setData({ orderCardList, storeInfoList, submitCouponList });
+    
+    const totalGoodsCount = data[0].quantity;
+    const totalSalePrice = data[0].price * data[0].quantity;
+    const totalPayAmount = data[0].price * data[0].quantity;
+    const settleType = 1;
+    this.setData({ 
+      orderCardList, 
+      storeInfoList, 
+      totalGoodsCount,
+      totalSalePrice,
+      totalPayAmount,
+      settleType
+    });
     return data;
   },
 
@@ -265,8 +267,8 @@ Page({
     });
   },
   onInput(e) {
-    const { storeNoteIndex } = this.data;
-    this.noteInfo[storeNoteIndex] = e.detail.value;
+    // const { storeNoteIndex } = this.data;
+    this.noteInfo[0] = e.detail.value;
   },
   onBlur() {
     this.setData({
@@ -285,13 +287,14 @@ Page({
   },
   onNoteConfirm() {
     // 备注信息 确认按钮
-    // const { storeInfoList, storeNoteIndex } = this.data;
-    // this.tempNoteInfo[storeNoteIndex] = this.noteInfo[storeNoteIndex];
-    // storeInfoList[storeNoteIndex].remark = this.noteInfo[storeNoteIndex];
+    console.log('enter onNoteConfirm')
+    const { storeInfoList,goodsRequestList } = this.data;
+    this.tempNoteInfo[0] = this.noteInfo[0];
+    storeInfoList[0].remark = this.noteInfo[0];
 
     this.setData({
       dialogShow: false,
-      // storeInfoList,
+      storeInfoList,
     });
   },
 
@@ -305,7 +308,7 @@ Page({
   onNoteCancel() {
     // 备注信息 取消按钮
     // const { storeNoteIndex } = this.data;
-    // this.noteInfo[storeNoteIndex] = this.tempNoteInfo[storeNoteIndex];
+    this.noteInfo[0] = this.tempNoteInfo[0];
     this.setData({
       dialogShow: false,
     });
@@ -342,12 +345,12 @@ Page({
   submitOrder() {
     const {
       settleDetailData,
-      userAddressReq,
-      invoiceData,
       storeInfoList,
-      submitCouponList,
       startDate,
-      endDate
+      endDate,
+      settleType,
+      totalPayAmount,
+      orderNum
     } = this.data;
     const { goodsRequestList } = this;
 
@@ -361,25 +364,22 @@ Page({
       });
       return;
     }
-    console.log(this.payLock)
-    console.log(!settleDetailData.settleType)
-    console.log(!settleDetailData.totalAmount)
+    // console.log(this.payLock)
+    // console.log(!settleType)
+    // console.log(!totalPayAmount)
     if (
       this.payLock ||
-      !settleDetailData.settleType ||
-      !settleDetailData.totalAmount
+      !settleType ||
+      !totalPayAmount
     ) {
       return;
     }
     this.payLock = true;
-    const resSubmitCouponList = this.handleCouponList(submitCouponList);
     const params = {
-      userAddressReq: settleDetailData.userAddress || userAddressReq,
       goodsRequestList: goodsRequestList,
-      userName: settleDetailData.userAddress.name || userAddressReq.name,
-      totalAmount: settleDetailData.totalPayAmount, //取优惠后的结算金额
+      totalAmount: totalPayAmount, //取优惠后的结算金额
       storeInfoList,
-      couponList: resSubmitCouponList,
+      orderNum,
     };
     commitPay(params).then(
       (res) => {
@@ -387,9 +387,9 @@ Page({
         this.payLock = false;
         const { data } = res;
         // 提交出现 失效 不在配送范围 限购的商品 提示弹窗
-        if (this.isInvalidOrder(data)) {
-          return;
-        }
+        // if (this.isInvalidOrder(data)) {
+        //   return;
+        // }
         if (res.code === 'Success') {
           this.handlePay(data, settleDetailData);
         } else {

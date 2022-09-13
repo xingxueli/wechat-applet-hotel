@@ -17,6 +17,7 @@ export const commitPay = (params) => {
     storeInfoList: params.storeInfoList, //备注信息列表
     couponList: params.couponList,
     groupInfo: params.groupInfo,
+    orderNum: params.orderNum,
   });
 };
 
@@ -95,7 +96,7 @@ export const wechatPayOrder = (payOrderInfo) => {
     /* wx.requestPayment({
       timeStamp,
       nonceStr,
-      package: payInfo.package,
+      package: payInfo.packageName,
       signType,
       paySign,
       success: function () {

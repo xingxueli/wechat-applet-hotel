@@ -13,7 +13,7 @@ export function fetchGoodsList(params) {
       "method": "POST",
       "data": {"roomNum":params.keyword,"pageNum":params.pageNum,"pageSize":params.pageSize}
     }).then((res) =>{
-      // console.log(res.data.data.rooms)
+      // console.log(res.data.data)
       return res.data.data.rooms;
     });
 }

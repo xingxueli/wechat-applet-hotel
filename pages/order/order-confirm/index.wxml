@@ -2,11 +2,10 @@
 
 <wxs module="handleInvoice" src="./handleInvoice.wxs" />
 <wxs module="getNotes" src="./getNotes.wxs" />
-<view class="order-sure" wx:if="{{!loading}}">
-	<!-- <address-card addressData="{{userAddress}}" bind:addclick="onGotoAddress" bind:addressclick="onGotoAddress" /> -->
+<view class="order-sure">
 	<view
 	 class="order-wrapper"
-	 wx:for="{{settleDetailData.storeGoodsList}}"
+	 wx:for="{{storeInfoList}}"
 	 wx:for-item="stores"
 	 wx:for-index="storeIndex"
 	 wx:key="storeIndex"
@@ -19,7 +18,7 @@
 			 name="store"
 			 class="store-logo"
 			/>
-			订单
+			{{stores.storeName}}
 		</view>
 		<view
 		 wx:if="{{orderCardList[storeIndex].goodsList.length > 0}}"
@@ -47,12 +46,12 @@
 	</view>
 	<view class="pay-detail">
 		<view class="pay-item">
-			<text>商品总额</text>
+			<text>订单总额</text>
 			<price
 			 fill
 			 decimalSmaller
 			 wr-class="pay-item__right font-bold"
-			 price="{{settleDetailData.totalSalePrice || '0'}}"
+			 price="{{totalSalePrice || '0'}}"
 			/>
 		</view>
     <view class="pay-item">
@@ -63,9 +62,17 @@
 			<text bindtap="onEndDate">结束时间</text>
 			{{endDate}}
 		</view>
+    <view class="pay-item">
+			<text>联系人</text>
+      {{orderName}}
+		</view>
+    <view class="pay-item">
+			<text>联系电话</text>
+      {{orderMobile}}
+		</view>
 		<view class="pay-item">
 			<text>订单备注</text>
-			<view class="pay-item__right" data-storenoteindex="{{0}}" catchtap="onNotes">
+			<view class="pay-item__right" catchtap="onNotes">
 				<text class="pay-remark">{{getNotes(storeInfoList, 0) ? getNotes(storeInfoList, 0) :'选填，建议先和酒店沟通确认'}}</text>
 				<t-icon name="chevron-right" size="32rpx" color="#BBBBBB" />
 			</view>
@@ -73,11 +80,11 @@
 	</view>
 	<view class="amount-wrapper">
 		<view class="pay-amount">
-			<text class="order-num">共{{settleDetailData.totalGoodsCount}}件</text>
+			<text class="order-num">共{{totalGoodsCount}}天</text>
 			<text >小计</text>
 			<price
 			 class="total-price"
-			 price="{{settleDetailData.totalPayAmount}}"
+			 price="{{totalPayAmount}}"
 			 fill="{{false}}"
 			 decimalSmaller
 			/>
@@ -89,9 +96,9 @@
 			 decimalSmaller
 			 fill
 			 class="price"
-			 price="{{settleDetailData.totalPayAmount || '0'}}"
+			 price="{{totalPayAmount || '0'}}"
 			/>
-			<view class="submit-btn {{ settleDetailData.settleType === 1 ? '':'btn-gray'}}" bindtap="submitOrder">
+			<view class="submit-btn {{settleType === 1 ? '':'btn-gray'}}" bindtap="submitOrder">
 				提交订单
 			</view>
 		</view>
@@ -113,7 +120,7 @@
 		 focus="{{dialogShow}}"
 		 class="notes"
 		 t-class="add-notes__textarea"
-		 value="{{storeInfoList[storeNoteIndex] && storeInfoList[storeNoteIndex].remark}}"
+		 value="{{storeInfoList[0] && storeInfoList[0].remark}}"
 		 placeholder="备注信息"
 		 t-class-textarea="add-notes__textarea__font"
 		 bindfocus="onFocus"
@@ -122,9 +129,6 @@
 		 maxlength="{{50}}"
 		/>
 	</t-dialog>
-	<!-- <t-popup visible="{{popupShow}}" placement="bottom" bind:visible-change="onPopupChange">
-		<no-goods slot="content" bind:change="onSureCommit" settleDetailData="{{settleDetailData}}" />
-	</t-popup> -->
 </view>
 <t-toast id="t-toast" />
 <t-dialog id="t-dialog" t-class-confirm="dialog__button-confirm" />

@@ -1,6 +1,6 @@
 /** 获取订单列表数据 */
 export function fetchOrders(params) {
-  console.log(params)
+  // console.log(params)
   return wx.cloud.callContainer({
     "config": {
       "env": "prod-3gvqnfsbbbe3e2b9"
@@ -11,9 +11,9 @@ export function fetchOrders(params) {
       "content-type": "application/json"
     },
     "method": "POST",
-    "data": {"orderStatus":params.orderStatus,"pageNum":params.parameter.pageNum,"pageSize":params.parameter.pageSize}
+    "data": {"orderStatus":params.parameter.orderStatus,"pageNum":params.parameter.pageNum,"pageSize":params.parameter.pageSize}
   }).then((res) =>{
-    console.log(res)
+    // console.log(res)
     return res.data;
   });
 }

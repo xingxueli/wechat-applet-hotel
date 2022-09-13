@@ -47,12 +47,21 @@ export function fetchSettleDetail(params) {
 
 /* 提交订单 */
 export function dispatchCommitPay(params) {
-  if (config.useMock) {
-    return mockDispatchCommitPay(params);
-  }
-
-  return new Promise((resolve) => {
-    resolve('real api');
+  console.log(params)
+  return wx.cloud.callContainer({
+    "config": {
+      "env": "prod-3gvqnfsbbbe3e2b9"
+    },
+    "path": "/order/create",
+    "header": {
+      "X-WX-SERVICE": "springboot-krih",
+      "content-type": "application/json"
+    },
+    "method": "POST",
+    "data": params
+  }).then((res) =>{
+    console.log(res)
+    return res.data;
   });
 }
 

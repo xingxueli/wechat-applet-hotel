@@ -93,7 +93,13 @@ Page({
               id: order.orderId,
               orderNo: order.orderNo,
               storeId: order.storeId,
+              quantity: order.quantity,
+              remark: order.remark,
               storeName: order.storeName,
+              orderName: order.orderName,
+              orderMobile: order.orderMobile,
+              predictStartTime: order.predictStartTime,
+              predictEndTime: order.predictEndTime,
               status: order.orderStatus,
               statusDesc: order.orderStatusName,
               amount: order.paymentAmount,
@@ -109,7 +115,9 @@ Page({
                   (spec) => spec.specValue,
                 ),
                 price: goods.actualPrice,
-                num: goods.buyQuantity
+                num: goods.buyQuantity,
+                startDate: goods.startDate,
+                endDate: goods.endDate
               })),
               buttons: order.buttonVOs || []
             };

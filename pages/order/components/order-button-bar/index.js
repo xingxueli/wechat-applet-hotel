@@ -1,6 +1,14 @@
 import Toast from 'tdesign-miniprogram/toast/index';
 import Dialog from 'tdesign-miniprogram/dialog/index';
 import { OrderButtonTypes } from '../../config';
+const obj2Params = (obj = {}, encode = false) => {
+  const result = [];
+  Object.keys(obj).forEach((key) =>
+    result.push(`${key}=${encode ? encodeURIComponent(obj[key]) : obj[key]}`),
+  );
+
+  return result.join('&');
+};
 
 Component({
   options: {
@@ -155,11 +163,55 @@ Component({
     },
 
     onPay() {
-      Toast({
-        context: this,
-        selector: '#t-toast',
-        message: '你点击了去支付',
-        icon: 'check-circle',
+      // Toast({
+      //   context: this,
+      //   selector: '#t-toast',
+      //   message: '你点击了去支付',
+      //   icon: 'check-circle',
+      // });
+      console.log(this.data)
+      const order = this.data.order;
+      const { predictStartTime,predictEndTime,orderName,orderMobile } = order;
+      if (!predictStartTime || !predictEndTime || !orderName || !orderMobile) {
+        Toast({
+          context: this,
+          selector: '#t-toast',
+          message: '请选择入住时间，联系人和电话',
+          icon: '',
+          duration: 1000,
+        });
+        return;
+      }
+      const query = {
+        quantity: order.quantity,
+        storeId: order.storeId,
+        storeName: order.storeName,
+        spuId: order.goodsList[0].spuId,
+        goodsName: order.goodsList[0].title,
+        skuId: order.goodsList[0].skuId,
+        available: 1,
+        price: order.goodsList[0].price,
+        specInfo: order.goodsList[0].specs?.map((item) => ({
+          specTitle: item.title,
+          specValue: item.specValueList[0].specValue,
+        })),
+        primaryImage: order.goodsList[0].thumb,
+        thumb: order.goodsList[0].thumb,
+        title: order.goodsList[0].title,
+        startDate: order.predictStartTime,
+        endDate: order.predictEndTime,
+        orderName: order.orderName,
+        orderMobile: order.orderMobile,
+        orderNum: order.orderNo,
+        remark: order.remark
+      };
+      let urlQueryStr = obj2Params({
+        goodsRequestList: encodeURIComponent(JSON.stringify([query])),
+      });
+      urlQueryStr = urlQueryStr ? `?${urlQueryStr}` : '';
+      const path = `/pages/order/order-confirm/index${urlQueryStr}`;
+      wx.navigateTo({
+        url: path,
       });
     },
 

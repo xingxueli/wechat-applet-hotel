@@ -91,18 +91,38 @@ Page({
     interval: 5000,
     soldNum: 0, // 已售数量
     startDate: '',
+    startDatePlusOneDay: '',
     endDate: '',
     initDateText: dayjs().format('YYYY-MM-DD'),
+    storeId: 0,
+    thumb: '',
+    title: '',
+    storeName: '',
+    price: 0,
+    originPrice: 0,
+    roomStatus: 0,
+    roomNum: '',
+    roomStatusString: '',
+    reserveTime: '',
+    reserveText: '',
+    images: [],
+    desc: [],//评论里边的图片，后续考虑开发
+    orderName: '',
+    orderMobile: '',
+    phoneError: false,
   },
 
-  // handlePopupHide() {
-  //   this.setData({
-  //     isStartPopupShow: false,
-  //     isEndPopupShow: false,
-  //   });
-  // },
-
   showStartPopup(type) {
+    if(this.data.roomStatus == 1){//已被预定，一定要是订单已支付状态
+      Toast({
+        context: this,
+        selector: '#t-toast',
+        message: '当前房间已经被预定，请看看其他房间',
+        icon: '',
+        duration: 1000,
+      });
+      return;
+    }
     this.setData({
       buyType: 1,
       outOperateStatus: type >= 1,
@@ -111,6 +131,16 @@ Page({
   },
 
   showEndPopup(type) {
+    if(this.data.roomStatus == 1){//已被预定，一定要是订单已支付状态
+      Toast({
+        context: this,
+        selector: '#t-toast',
+        message: '当前房间已经被预定，请看看其他房间',
+        icon: '',
+        duration: 1000,
+      });
+      return;
+    }
     this.setData({
       buyType: 1,
       outOperateStatus: type >= 1,
@@ -253,41 +283,42 @@ Page({
   },
 
   gotoBuy(type) {
-    const { startDate,endDate, buyNum } = this.data;
-    if (!startDate || !endDate) {
+    const { startDate,endDate,orderName,orderMobile } = this.data;
+    if (!startDate || !endDate || !orderName || !orderMobile) {
       Toast({
         context: this,
         selector: '#t-toast',
-        message: '请选择入住时间',
+        message: '请选择入住时间，联系人和电话',
         icon: '',
         duration: 1000,
       });
       return;
     }
     const query = {
-      quantity: buyNum,
-      storeId: '1',
+      quantity: dayjs(endDate).diff(startDate, 'day'),
+      storeId: this.data.storeId,
+      storeName: this.data.storeName,
       spuId: this.data.spuId,
-      goodsName: this.data.details.title,
+      goodsName: this.data.title,
       skuId: this.data.skuId,
       available: 1,
-      price: this.data.details.minSalePrice,
+      price: this.data.price,
       specInfo: this.data.details.specList?.map((item) => ({
         specTitle: item.title,
         specValue: item.specValueList[0].specValue,
       })),
-      primaryImage: this.data.details.primaryImage,
-      spuId: this.data.details.spuId,
-      thumb: this.data.details.primaryImage,
-      title: this.data.details.title,
+      primaryImage: this.data.thumb,
+      thumb: this.data.thumb,
+      title: this.data.title,
       startDate: startDate,
       endDate: endDate,
+      orderName: this.data.orderName,
+      orderMobile: this.data.orderMobile,
     };
     let urlQueryStr = obj2Params({
-      goodsRequestList: JSON.stringify([query]),
+      goodsRequestList: encodeURIComponent(JSON.stringify([query])),
     });
     urlQueryStr = urlQueryStr ? `?${urlQueryStr}` : '';
-    console.log(urlQueryStr)
     const path = `/pages/order/order-confirm/index${urlQueryStr}`;
     wx.navigateTo({
       url: path,
@@ -297,8 +328,9 @@ Page({
   onStartConfirm(e) {
     this.setData({
       startDate: e.detail.value,
+      startDatePlusOneDay: dayjs(e.detail.value).add(1,'day').format('YYYY-MM-DD')
     });
-    const { buyType } = this.data;
+    const { buyType} = this.data;
     if (buyType === 1) {
       this.gotoBuy();
     } else {
@@ -306,11 +338,15 @@ Page({
     }
   },
 
+  print(e){
+    console.log('enter print')
+  },
+
   onEndConfirm(e) {
     this.setData({
       endDate: e.detail.value,
     });
-    const { buyType } = this.data;
+    const { buyType} = this.data;
     if (buyType === 1) {
       this.gotoBuy();
     } else {
@@ -344,44 +380,27 @@ Page({
   },
 
   getDetail(spuId) {
-    Promise.all([fetchGood(spuId), fetchActivityList()]).then((res) => {
-      const [details, activityList] = res;
-      const skuArray = [];
-      const {
-        skuList,
-        primaryImage,
-        isPutOnSale,
-        minSalePrice,
-        maxSalePrice,
-        maxLinePrice,
-        soldNum,
-      } = details;
-      skuList.forEach((item) => {
-        skuArray.push({
-          skuId: item.skuId,
-          quantity: item.stockInfo ? item.stockInfo.stockQuantity : 0,
-          specInfo: item.specInfo,
-        });
-      });
-      const promotionArray = [];
-      activityList.forEach((item) => {
-        promotionArray.push({
-          tag: item.promotionSubCode === 'MYJ' ? '满减' : '满折',
-          label: '满100元减99.9元',
-        });
-      });
+    Promise.resolve(fetchGood(spuId)).then((res) => {
+      console.log(res)
+      const details = res;
       this.setData({
         details,
-        activityList,
-        isStock: details.spuStockQuantity > 0,
-        maxSalePrice: maxSalePrice ? parseInt(maxSalePrice) : 0,
-        maxLinePrice: maxLinePrice ? parseInt(maxLinePrice) : 0,
-        minSalePrice: minSalePrice ? parseInt(minSalePrice) : 0,
-        list: promotionArray,
-        skuArray: skuArray,
-        primaryImage,
-        soldout: isPutOnSale === 0,
-        soldNum,
+        spuId: details.spuId,
+        storeId: details.storeId,
+        thumb: details.thumb,
+        title: details.title,
+        storeName: details.storeName,
+        price: details.price,
+        originPrice: details.originPrice,
+        roomStatus: details.roomStatus,
+        roomNum: details.roomNum,
+        roomStatusString: details.roomStatusString,
+        reserveTime: details.reserveTime,
+        reserveText: details.roomStatus == 1 ? '已被预定，预定时间'+details.reserveTime : '',
+        images: details.images,
+        startDate: '',
+        endDate: '',
+        desc: [],//评论里边的图片，后续考虑开发
       });
     });
   },
@@ -475,5 +494,38 @@ Page({
     this.getDetail(spuId);
     this.getCommentsList(spuId);
     this.getCommentsStatistics(spuId);
+  },
+
+  onPhoneInput(e) {
+    const { phoneError } = this.data;
+    const isPhoneNumber = /^[1][3,4,5,7,8,9][0-9]{9}$/.test(e.detail.value);
+    if (phoneError === isPhoneNumber) {
+        this.setData({
+            phoneError: !isPhoneNumber,
+        });
+    }
+    if(isPhoneNumber === true){
+      this.setData({
+        orderMobile: e.detail.value,
+      });
+      const { buyType} = this.data;
+      if (buyType === 1) {
+        this.gotoBuy();
+      } else {
+        this.addCart();
+      }
+    }
+  },
+
+  inputOrderName(e){
+    this.setData({
+      orderName: e.detail.value,
+    });
+    const { buyType} = this.data;
+    if (buyType === 1) {
+      this.gotoBuy();
+    } else {
+      this.addCart();
+    }
   },
 });

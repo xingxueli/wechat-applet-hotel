@@ -11,6 +11,7 @@
     "t-icon": "tdesign-miniprogram/icon/icon",
     "price": "/components/price/index",
     "buy-bar": "./components/buy-bar/index",
-    "t-date-time-picker": "tdesign-miniprogram/date-time-picker/date-time-picker"
+    "t-date-time-picker": "tdesign-miniprogram/date-time-picker/date-time-picker",
+    "t-input": "tdesign-miniprogram/input/input"
   }
 }
