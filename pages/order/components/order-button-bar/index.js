@@ -1,6 +1,7 @@
 import Toast from 'tdesign-miniprogram/toast/index';
 import Dialog from 'tdesign-miniprogram/dialog/index';
 import { OrderButtonTypes } from '../../config';
+import { cancelOrder } from '../../../../services/order/orderConfirm';
 const obj2Params = (obj = {}, encode = false) => {
   const result = [];
   Object.keys(obj).forEach((key) =>
@@ -129,12 +130,50 @@ Component({
     },
 
     onCancel() {
-      Toast({
-        context: this,
-        selector: '#t-toast',
-        message: '你点击了取消订单',
-        icon: 'check-circle',
-      });
+      const params = this.data.order;
+      cancelOrder(params).then(
+        (res) => {
+          if (res.code === 'Success') {
+            Toast({
+              context: this,
+              selector: '#t-toast',
+              message: '订单取消成功',
+              duration: 2000,
+              icon: '',
+            });
+            //刷新订单列表
+             setTimeout(() => {
+              wx.redirectTo({ url: '/pages/order/order-list/index' });
+             });
+          } else {
+            Toast({
+              context: this,
+              selector: '#t-toast',
+              message: res.errorMsg || '订单取消失败，请联系客服人员进行取消',
+              duration: 2000,
+              icon: '',
+            });
+            // setTimeout(() => {
+            //   // 提交支付失败   返回购物车
+            //   wx.navigateBack();
+            // }, 2000);
+          }
+        },
+        (err) => {
+          console.log(err)
+            Toast({
+              context: this,
+              selector: '#t-toast',
+              message: '取消失败，请联系客服',
+              duration: 2000,
+              icon: 'close-circle',
+            });
+            //是否需要跳转
+            // setTimeout(() => {
+            //   wx.redirectTo({ url: '/order/list' });
+            // });
+        },
+      );
     },
 
     onConfirm() {
@@ -163,12 +202,6 @@ Component({
     },
 
     onPay() {
-      // Toast({
-      //   context: this,
-      //   selector: '#t-toast',
-      //   message: '你点击了去支付',
-      //   icon: 'check-circle',
-      // });
       console.log(this.data)
       const order = this.data.order;
       const { predictStartTime,predictEndTime,orderName,orderMobile } = order;

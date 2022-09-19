@@ -1,5 +1,4 @@
 import Toast from 'tdesign-miniprogram/toast/index';
-import { fetchSettleDetail } from '../../../services/order/orderConfirm';
 import { commitPay, wechatPayOrder } from './pay';
 
 const stripeImg = `https://cdn-we-retail.ym.tencent.com/miniapp/order/stripe.png`;
@@ -201,8 +200,8 @@ Page({
     const storeInfoList = [];
     const submitCouponList = []; //使用优惠券列表;
 
-    console.log('enter handleResToGoodsCard')
-    console.log(data)
+    // console.log('enter handleResToGoodsCard')
+    // console.log(data)
     data &&
       data.forEach((ele,index) => {
         const orderCard = {
@@ -463,13 +462,17 @@ Page({
 
   // 处理支付
   handlePay(data, settleDetailData) {
-    const { channel, payInfo, tradeNo, interactId, transactionId } = data;
+    const { channel, payInfo, tradeNo, interactId, transactionId,payAmt } = data;
     const { totalAmount, totalPayAmount } = settleDetailData;
+    // console.log(data)
+    // console.log(settleDetailData)
+    // console.log(totalAmount)
+    // console.log(totalPayAmount)
     const payOrderInfo = {
       payInfo: payInfo,
       orderId: tradeNo,
-      orderAmt: totalAmount,
-      payAmt: totalPayAmount,
+      orderAmt: totalAmount === undefined ? payAmt : totalAmount,
+      payAmt: totalPayAmount === undefined ? payAmt : totalPayAmount,
       interactId: interactId,
       tradeNo: tradeNo,
       transactionId: transactionId,
