@@ -342,6 +342,22 @@ Page({
   },
   // 提交订单
   submitOrder() {
+    let that = this
+    wx.requestSubscribeMessage({
+      tmplIds: ['qzQx2J_pSwoS3jE8jHQgv2OMX78kOkRLlUQSNnSo0BQ',
+      'wqjsb7aUYKcdjqY-yMZI7FPQd65ds4NwcF_XOqGDQVk',
+      'iWEjfRGKgZBn_Wr1QMB79CtXBrRA-L3lxhDidN2ouQQ'],
+      success (res) {
+        console.log(res)
+      },
+      complete(res){
+        console.log(res)
+        that.doSubmitOrder();
+      }
+    })
+  },
+
+  doSubmitOrder(){
     const {
       settleDetailData,
       storeInfoList,
